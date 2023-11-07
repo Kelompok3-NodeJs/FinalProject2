@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const {hashPassword} = require('../helpers/bcrypt')
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -13,33 +14,32 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.Photo)
       this.hasMany(models.SocialMedia)
+      this.hasMany(models.Comment)
     }
   }
   User.init({
     // validasi full name
     full_name: {
       type:DataTypes.STRING,
-        // unique: {
-        //   args: true,
-        //   msg: 'Full name already in use!'
-        // },
         validate: {
-          args: true,
-          msg: 'Full name cannot be empty!'
+          notEmpty: {
+            args: true,
+            msg: 'Full name cannot be empty!'
+          }
         }
     },
 
     // validasi email
     email: {
       type: DataTypes.STRING,
+      unique: {
+        args: true,
+        msg: 'Email already in use!'
+      },
         validate: {
           isEmail: {
             args: true,
             msg: 'Invalid email format!'
-          },
-          unique: {
-            args: true,
-            msg: 'Email already in use!'
           },
           notEmpty: {
             args: true,
@@ -51,14 +51,14 @@ module.exports = (sequelize, DataTypes) => {
     // validasi username
     username: {
       type:DataTypes.STRING,
+      unique: {
+        args: true,
+        msg: 'Username already in use!'
+      },
         validate: {
           notEmpty: {
             args: true,
             msg: 'Username cannot be empty!'
-          },
-          unique: {
-            args: true,
-            msg: 'Username already in use!'
           }
         }
     },
