@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     // validasi email
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
       unique: {
         args: true,
         msg: 'Email already in use!'
@@ -51,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
     // validasi username
     username: {
       type:DataTypes.STRING,
+      allowNull: false,
       unique: {
         args: true,
         msg: 'Username already in use!'
