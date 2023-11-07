@@ -18,5 +18,5 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeConstraint('Users', 'unique_username_constraint');
     await queryInterface.removeConstraint('Users', 'unique_email_constraint');
-  }
+  }
 };
