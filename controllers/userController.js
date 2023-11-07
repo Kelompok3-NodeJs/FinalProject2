@@ -72,6 +72,42 @@ class UserController {
             console.log(err)
          })
     }
+
+    static update(req,res){
+        const id = req.params.id
+        const { email, full_name, username, profile_image_url, age, phone_number } = req.body
+        User.update({
+            email, 
+            full_name, 
+            username, 
+            profile_image_url, 
+            age, 
+            phone_number 
+        },{
+            where:{
+                id
+            },
+            returning: true
+        })
+        .then(([rowsUpdate, [updatedUser]]) => {
+            if (rowsUpdate === 0) {
+                res.status(404).json({message: 'User Not Found'})
+            }
+
+            let response = {
+                email: updatedUser.email,
+                full_name: updatedUser.full_name,
+                username: updatedUser.username,
+                profile_image_url: updatedUser.profile_image_url,
+                age: updatedUser.age,
+                phone_number: updatedUser.phone_number
+            }
+            res.status(200).json(response)
+        })
+        .catch(err => {
+            res.status(500).json({message: 'Internal Server Error'})
+        })
+    }
 }
 
 module.exports = UserController
