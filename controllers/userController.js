@@ -1,4 +1,4 @@
-const comparePassword = require('../helpers/bcrypt')
+const {comparePassword} = require('../helpers/bcrypt')
 const { User } = require('../models')
 const user = require('../models/user')
 const { generateToken } = require('../helpers/jwt')
@@ -48,25 +48,29 @@ class UserController {
         })
         .then(user => {
             if (!user) {
-                    res.status(400).json({ message: 'Invalid email' })
-                } else {
-                    const isCorrect = comparePassword(password, user.password)
-                    if (!isCorrect) {
-                        res.status(400).json({ message: 'Invalid password' })
-                    } else {
-                        const payload = {
-                            id: user.id,
-                            email: user.email
-                        }
-                        const token = generateToken(payload)
-                        res.status(200).json({ token })
-                    }
+                throw {
+                    name: "user login error",
+                    devMesaage: `User With Email "${email}" Not Found`
                 }
-            })
-            .catch(err => {
-                res.status(401).json(err)
-                console.log(err)
-            })
+            }
+            const isCorrect = comparePassword(password, user.password)
+            if (!isCorrect) {
+                throw {
+                    name: "user login error",
+                    devMesaage: `Wrong Password`
+                }
+            }
+            let payload = {
+                id: user.id,
+                email: user.email
+            }
+            const token = generateToken(payload)
+            res.status(200).json({ token })
+        })
+        .catch(err => {
+             res.status(401).json(err)
+            console.log(err)
+         })
     }
 }
 
