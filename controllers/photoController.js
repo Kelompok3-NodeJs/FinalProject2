@@ -1,13 +1,11 @@
 const { Photo,User,Comment} = require('../models');
 const user = require('../models/user');
-const username = user.username;
 
 class PhotoController {
     // post photo
     static postPhoto(req, res) {
         const { poster_image_url, title, caption } = req.body;
         const user = res.locals.user
-        console.log(res.locals.user);
         Photo.create({
             poster_image_url,
             title,
@@ -33,8 +31,8 @@ class PhotoController {
 
     // get /photos
     static getPhotos(req, res) {
-        Photo.findAll({
-            include: User,Comment
+        Photo.findAll({ 
+            include:[{model: User},{model: Comment, include: [{ model: User }]}]
         })
             .then(result => {
                 let response = result.map(el => {
@@ -46,12 +44,14 @@ class PhotoController {
                         UserId: el.UserId,
                         createdAt: el.createdAt,
                         updatedAt: el.updatedAt,
-                        // Comments: [{
-                        //     comment: el.Comments.comment,
-                        //     User:{
-                        //         username: el.Comments.User.username
-                        //     }
-                        // }],
+                        Comments:el.Comments.map(comment => {
+                            return {
+                                comment: comment.comment,
+                                User: {
+                                    username: comment.User.username
+                                }
+                            };
+                        }),
                         User: {
                             id: el.User.id,
                             username: el.User.username,
