@@ -13,5 +13,6 @@ router.put('/users/:id', authorization, UserController.update);
 router.post('/photos', PhotoController.postPhoto);
 router.get('/photos', PhotoController.getPhotos);
 router.put('/photos/:id', photoAuthorization,PhotoController.updatePhoto);
+router.delete('/photos/:id', photoAuthorization,PhotoController.deletePhoto);
 
 module.exports = router;

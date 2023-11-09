@@ -103,6 +103,26 @@ class PhotoController {
             })
     }
 
+    // delete /photos/:photoid
+    static deletePhoto(req, res) {
+        const  id  = req.params.id;
+        Photo.destroy({
+            where: {
+                id
+            }
+        })
+            .then(result => {
+                if (result === 0) {
+                    res.status(404).json({ message: 'Photo Not Found' })
+                }
+                res.status(200).json({ message: 'Your photo has been successfully deleted' })
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json(err);
+            })
+    }
+
 }
 
 module.exports = PhotoController;
