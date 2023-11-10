@@ -84,12 +84,40 @@ async function commentAuth(req, res, next) {
 }
 
 
-async function sosialmediaAuthorization(req, res, next) {
-    const authenticatedUserId = res.locals.user.id
+sync function socialmediaGetAuth(req, res, next) {
+    try{
+        const authenticatedUserId = res.locals.user.id
+        const socialMedias = await SocialMedia.findAll({
+            where:{
+                UserId:authenticatedUserId
+            }
+        })
+        if(!socialMedias){
+            return res.status(404).json({message:'Social Media Not Found'})
+        }
+        return next()
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
 
-    next();
 }
 
+async function socialmediaAuthorization(req, res, next) {
+    try {
+        const authenticatedUserId = res.locals.user.id;
+        const { id } = req.params;
+        const socialMedia = await SocialMedia.findByPk(id);
+        if (socialMedia.UserId === authenticatedUserId) {
+            return next();
+        }
+        return res.status(401).json({ message: 'Unauthorized' });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
+}
 
 
 module.exports = {
@@ -97,5 +125,6 @@ module.exports = {
   photoAuthorization,
   commentGetAuth,
   commentAuth,
-  sosialmediaAuthorization
+  socialmediaGetAuth,
+  socialmediaAuthorization
 };
