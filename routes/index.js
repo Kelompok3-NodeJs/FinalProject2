@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {authorization} = require('../middlewares/authorization');
+const {authorization,commentAuthorization} = require('../middlewares/authorization');
 const {photoAuthorization} = require('../middlewares/authorization');
 const authentication = require('../middlewares/authentication');
 const UserController = require('../controllers/userController');
@@ -16,5 +16,5 @@ router.get('/photos', PhotoController.getPhotos);
 router.put('/photos/:id', photoAuthorization,PhotoController.updatePhoto);
 router.delete('/photos/:id', photoAuthorization,PhotoController.deletePhoto);
 router.post('/comments', CommentController.postComment);
-
+router.get('/comments',CommentController.getComments, commentAuthorization);
 module.exports = router;

@@ -1,4 +1,5 @@
-const {User,Photo} = require('../models')
+const {User,Photo,Comment} = require('../models')
+const {verifyToken} = require('../helpers/jwt')
 
 function authorization(req, res, next) {
     const id = req.params.id
@@ -48,7 +49,27 @@ async function photoAuthorization(req, res, next) {
     }
 }
 
+async function commentAuthorization(req, res, next) {
+    try {
+        const authenticatedUserId = res.locals.user.id;
+        const comments = await Comment.findAll({
+            where: {
+                UserId: authenticatedUserId
+            }
+        });
+
+        if (comments.length > 0) {
+            return next();
+        }
+        return res.status(401).json({ message: 'Unauthorized' });
+        
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
+}
 module.exports = {
     authorization,
-    photoAuthorization
+    photoAuthorization,
+    commentAuthorization
 }
