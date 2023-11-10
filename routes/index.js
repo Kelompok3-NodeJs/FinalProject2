@@ -16,5 +16,5 @@ router.get('/photos', PhotoController.getPhotos);
 router.put('/photos/:id', photoAuthorization,PhotoController.updatePhoto);
 router.delete('/photos/:id', photoAuthorization,PhotoController.deletePhoto);
 router.post('/comments', CommentController.postComment);
-router.get('/comments',CommentController.getComments, commentAuthorization);
+router.get('/comments', commentAuthorization,CommentController.getComments, );
 module.exports = router;

@@ -27,6 +27,33 @@ async function authorization(req, res, next) {
   }
 }
 
+async function photoAuthorization(req, res, next) {
+    const photoId = req.params.id;
+    const authenticatedUserId = res.locals.user.id;
+
+    try {
+        const result = await Photo.findOne({
+            where: {
+                id: photoId
+            }
+        });
+        
+        if (!result) {
+            return res.status(404).json({ message: 'result Not Found' });
+        }
+
+        if (result.UserId === authenticatedUserId) {
+            return next(); // Pengguna memiliki akses ke foto, lanjutkan ke handler berikutnya
+        } else {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
+}
+
 module.exports = {
   authorization,
+  photoAuthorization
 };
