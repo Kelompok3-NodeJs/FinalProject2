@@ -61,7 +61,7 @@ static postSocialMedia(req, res) {
     
 
     // put / comment
-    static async PutSocialMedia(req, res) {
+    static async putSocialMedia(req, res) {
         try {
             const authenticatedUserId = res.locals.user.id;
             const { name, social_media_url } = req.body;
@@ -92,6 +92,22 @@ static postSocialMedia(req, res) {
         } catch (error) {
             console.log(error);
             return res.status(500).json(error)
+        }
+    }
+
+    // delete /socialMedia
+    static async deleteSocialMedia(req,res){
+        try {
+            const {id} = req.params
+            await SocialMedia.destroy({
+                where:{
+                    id:id
+                }
+            })
+            res.status(200).json({message:'your social media has been successfully deleted'})
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error)
         }
     }
  
