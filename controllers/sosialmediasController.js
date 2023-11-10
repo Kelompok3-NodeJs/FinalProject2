@@ -36,18 +36,18 @@ static postSocialMedia(req, res) {
                 }
             });
             
-            let response = sosmed.map(([, [el]]) => {
+            let response = sosmed.map(([, [result]]) => {
                 return {
-                    id: el.id,
-                    name: el.name,
-                    social_media_url: el.social_media_url,
-                    UserId: el.UserId,
-                    createdAt: el.createdAt,
-                    updatedAt: el.updatedAt,
+                    id: result.id,
+                    name: result.name,
+                    social_media_url: result.social_media_url,
+                    UserId: result.UserId,
+                    createdAt: result.createdAt,
+                    updatedAt: result.updatedAt,
                     User: {
-                        id: el.User.id,
-                        username: el.User.username,
-                        profile_image_url: el.User.profile_image_url,
+                        id: result.User.id,
+                        username: result.User.username,
+                        profile_image_url: result.User.profile_image_url,
                     },
                 };
             });
