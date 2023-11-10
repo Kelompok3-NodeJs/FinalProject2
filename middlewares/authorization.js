@@ -48,7 +48,7 @@ async function photoAuthorization(req, res, next) {
     }
 }
 
-async function commentAuth(req, res, next) {
+async function commentAuthorization(req, res, next) {
     try {
         const authenticatedUserId = res.locals.user.id;
         const { id } = req.params;
