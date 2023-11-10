@@ -85,13 +85,8 @@ async function commentAuth(req, res, next) {
 
 
 async function sosialmediaAuthorization(req, res, next) {
-    const id = req.params.id
     const authenticatedUserId = res.locals.user.id
     console.log(id, authenticatedUserId);
-
-    if (id !== authenticatedUserId) {
-        return res.status(401).json({ message: 'Unauthorized: You can only post own profile' });
-    }
 
     next();
 }

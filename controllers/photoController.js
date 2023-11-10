@@ -1,11 +1,11 @@
-const { Photo, User } = require('../models');
+const { Photo,User,Comment} = require('../models');
+const user = require('../models/user');
 
 class PhotoController {
-
+    // post photo
     static postPhoto(req, res) {
         const { poster_image_url, title, caption } = req.body;
         const user = res.locals.user
-        console.log(res.locals.user);
         Photo.create({
             poster_image_url,
             title,
@@ -15,13 +15,13 @@ class PhotoController {
         })
             .then(result => {
                 let response = {
+                    id: result.id,
                     poster_image_url: result.poster_image_url,
                     title: result.title,
                     caption: result.caption,
-                    UserId: result.userId
+                    UserId: result.UserId
                 }
-                console.log(result);
-                res.status(201).json(result)
+                res.status(201).json(response)
             })
             .catch(err => {
                 console.log(err);
@@ -29,43 +29,60 @@ class PhotoController {
             })
      }
 
-     // get /photos
+    // get /photos
     static getPhotos(req, res) {
+        //this will get only photos were Userid has been Authenticated
+        const authenticatedUserId = res.locals.user.id; //this Userid from bearer Token
         Photo.findAll({ 
-            include:[{model: User},{model: Comment, include: [{ model: User }]}]
+            include: [
+                { model: User },
+                {
+                    model: Comment,
+                    include: [{ model: User }]
+                }
+            ],where: {
+                UserId: authenticatedUserId //find the photo were Userid has been Authenticated
+            }
         })
-            .then(result => {
-                let response = result.map(el => {
+        .then(result => {
+            let response = result.map(el => {
+                const comments = el.Comments || []; // Ensure Comments is an array
+    
+                const commentsData = comments.map(comment => {
+                    const commentUser = comment.User || {}; // Ensure User is not null
                     return {
-                        id: el.id,
-                        title: el.title,
-                        caption: el.caption,
-                        poster_image_url: el.poster_image_url,
-                        UserId: el.UserId,
-                        createdAt: el.createdAt,
-                        updatedAt: el.updatedAt,
-                        Comments:el.Comments.map(comment => {
-                            return {
-                                comment: comment.comment,
-                                User: {
-                                    username: comment.User.username
-                                }
-                            };
-                        }),
+                        comment: comment.comment,
                         User: {
-                            id: el.User.id,
-                            username: el.User.username,
-                            profile_image_url: el.User.profile_image_url
+                            username: commentUser.username || 'No Username' // Fallback if username is missing
                         }
+                    };
+                });
+    
+                const user = el.User || {}; // Ensure User is not null
+    
+                return {
+                    id: el.id,
+                    title: el.title,
+                    caption: el.caption,
+                    poster_image_url: el.poster_image_url,
+                    UserId: el.UserId,
+                    createdAt: el.createdAt,
+                    updatedAt: el.updatedAt,
+                    Comments: commentsData,
+                    User: {
+                        id: user.id,
+                        username: user.username || 'No Username', // Fallback if username is missing
+                        profile_image_url: user.profile_image_url
                     }
-                
-                })
-                res.status(200).json(response)
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).json(err);
-            })
+                };
+            });
+    
+            res.status(200).json(response);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err);
+        });
     }
 
     // put /photos/:photoid
