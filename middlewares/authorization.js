@@ -1,80 +1,32 @@
-<<<<<<< HEAD
-const {user} = require('../models')
-=======
-const {User,Photo,Comment} = require('../models')
-const {verifyToken} = require('../helpers/jwt')
->>>>>>> jaluadhi
+const { User } = require('../models');
 
-function authorization(req, res, next) {
-    const id = req.params.id
-    user.findByPk(id)
-    .then(result => {
-        if (!result) {
-            res.status(404).json({message: 'User Not Found'})
-        } else {
-            if (result.id === req.userData.id) {
-                next()
-            } else {
-                res.status(401).json({message: 'Unauthorized'})
-            }
-        }
-    })
-    .catch(err => {
-        res.status(500).json({message: 'Internal Server Error'})
-    })
-}
+async function authorization(req, res, next) {
+  const userId = req.user.id; // Assuming you have the authenticated user ID in req.user
+  const reflectionId = req.params.id;
 
-<<<<<<< HEAD
-module.exports = authorization
-=======
-async function photoAuthorization(req, res, next) {
-    const photoId = req.params.id;
-    const authenticatedUserId = res.locals.user.id;
+  try {
+    const user = await User.findByPk(userId);
 
-    try {
-        const result = await Photo.findOne({
-            where: {
-                id: photoId
-            }
-        });
-        
-        if (!result) {
-            return res.status(404).json({ message: 'result Not Found' });
-        }
-
-        if (result.UserId === authenticatedUserId) {
-            return next(); // Pengguna memiliki akses ke foto, lanjutkan ke handler berikutnya
-        } else {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({message: 'Internal Server Error'});
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
     }
-}
 
-async function commentAuthorization(req, res, next) {
-    try {
-        const authenticatedUserId = res.locals.user.id;
-        const comments = await Comment.findAll({
-            where: {
-                UserId: authenticatedUserId
-            }
-        });
+    // Assuming there's an association between User and other models like Photo, SocialMedia, and Comment
+    const userReflection = await user.getPhotos({
+      where: { id: reflectionId },
+    });
 
-        if (comments.length > 0) {
-            return next();
-        }
-        return res.status(401).json({ message: 'Unauthorized' });
-        
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({message: 'Internal Server Error'});
+    if (!userReflection) {
+      return res.status(404).json({ message: 'Reflection not found' });
     }
+
+    next();
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json(err);
+  }
 }
+
 module.exports = {
-    authorization,
-    photoAuthorization,
-    commentAuthorization
-}
->>>>>>> jaluadhi
+  authorization,
+};
