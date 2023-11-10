@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {authorization,photoAuthorization,commentGetAuth,commentAuth,sosialmediaAuthorization} = require('../middlewares/authorization');
+const {authorization,photoAuthorization,commentGetAuth,commentAuth,socialmediaAuthorization,socialmediaGetAuth} = require('../middlewares/authorization');
 const authentication = require('../middlewares/authentication');
 const UserController = require('../controllers/userController');
 const PhotoController = require('../controllers/photoController');
@@ -23,7 +23,8 @@ router.put('/comments/:id', commentAuth,CommentController.PutComments);
 router.delete('/comments/:id', commentAuth,CommentController.DeleteComments);
 //SocialMediasController
 router.post('/socialmedia', SocialMediasController.postSocialMedia);
-router.get('/socialmedia', sosialmediaAuthorization,SocialMediasController.getSocialMedia);
-router.put('/socialmedia', sosialmediaAuthorization,SocialMediasController.PutSocialMedia);
+router.get('/socialmedia', socialmediaGetAuth,SocialMediasController.getSocialMedia);
+router.put('/socialmedias/:id',socialmediaAuthorization,SocialMediasController.putSocialMedia);
+router.delete('/socialmedias/:id',socialmediaAuthorization,SocialMediasController.deleteSocialMedia);
 
 module.exports = router;

@@ -84,7 +84,7 @@ async function commentAuth(req, res, next) {
 }
 
 
-sync function socialmediaGetAuth(req, res, next) {
+async function socialmediaGetAuth(req, res, next) {
     try{
         const authenticatedUserId = res.locals.user.id
         const socialMedias = await SocialMedia.findAll({
