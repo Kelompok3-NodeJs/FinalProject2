@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const { Photo, User } = require('../models');
 
 class PhotoController {
@@ -7,16 +6,6 @@ class PhotoController {
         const { poster_image_url, title, caption } = req.body;
         const user = res.locals.user
         console.log(res.locals.user);
-=======
-const { Photo,User,Comment} = require('../models');
-const user = require('../models/user');
-
-class PhotoController {
-    // post photo
-    static postPhoto(req, res) {
-        const { poster_image_url, title, caption } = req.body;
-        const user = res.locals.user
->>>>>>> main
         Photo.create({
             poster_image_url,
             title,
@@ -26,7 +15,6 @@ class PhotoController {
         })
             .then(result => {
                 let response = {
-<<<<<<< HEAD
                     poster_image_url: result.poster_image_url,
                     title: result.title,
                     caption: result.caption,
@@ -34,15 +22,6 @@ class PhotoController {
                 }
                 console.log(result);
                 res.status(201).json(result)
-=======
-                    id: result.id,
-                    poster_image_url: result.poster_image_url,
-                    title: result.title,
-                    caption: result.caption,
-                    UserId: result.UserId
-                }
-                res.status(201).json(response)
->>>>>>> main
             })
             .catch(err => {
                 console.log(err);
@@ -50,11 +29,7 @@ class PhotoController {
             })
      }
 
-<<<<<<< HEAD
      // get /photos
-=======
-    // get /photos
->>>>>>> main
     static getPhotos(req, res) {
         Photo.findAll({ 
             include:[{model: User},{model: Comment, include: [{ model: User }]}]
