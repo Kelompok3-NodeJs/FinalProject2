@@ -44,12 +44,7 @@ const {
             email: decode.email
         }
     })
-      //const user = await User.findOne({
-       // where: {
-       //   id: decode.id,
-       //   email: decode.email
-       // }
-      //})
+     
     .then(user => {
       if (!user) {
         console.log(!User);

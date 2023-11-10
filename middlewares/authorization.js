@@ -1,7 +1,7 @@
-const { User } = require('../models');
+const { User, Photo, Comment } = require('../models');
 
 async function authorization(req, res, next) {
-  const userId = req.user.id; // Assuming you have the authenticated user ID in req.user
+  const userId = res.locals.user.id; // Assuming you have the authenticated user ID in req.user
   const reflectionId = req.params.id;
 
   try {
@@ -53,7 +53,28 @@ async function photoAuthorization(req, res, next) {
     }
 }
 
+async function commentAuthorization(req, res, next) {
+    try {
+        const authenticatedUserId = res.locals.user.id;
+        const comments = await Comment.findAll({
+            where: {
+                UserId: authenticatedUserId
+            }
+        });
+
+        if (comments.length > 0) {
+            return next();
+        }
+        return res.status(401).json({ message: 'Unauthorized' });
+        
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
+}
+
 module.exports = {
   authorization,
-  photoAuthorization
+  photoAuthorization,
+  commentAuthorization
 };
