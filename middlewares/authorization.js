@@ -1,4 +1,4 @@
-const { User, Photo, Comment } = require('../models');
+const { User, Photo, Comment, socialmedia } = require('../models');
 
 function authorization(req, res, next) {
     const id = req.params.id
@@ -66,10 +66,26 @@ async function commentAuthorization(req, res, next) {
         console.log(err);
         return res.status(500).json({message: 'Internal Server Error'});
     }
+    
 }
+
+async function sosialmediaAuthorization(req, res, next) {
+    const id = req.params.id
+    const authenticatedUserId = res.locals.user.id
+    console.log(id, authenticatedUserId);
+
+    if (id !== authenticatedUserId) {
+        return res.status(401).json({ message: 'Unauthorized: You can only post own profile' });
+    }
+
+    next();
+}
+
+
 
 module.exports = {
   authorization,
   photoAuthorization,
-  commentAuthorization
+  commentAuthorization,
+  sosialmediaAuthorization
 };
