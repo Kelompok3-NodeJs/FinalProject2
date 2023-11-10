@@ -49,7 +49,7 @@ async function photoAuthorization(req, res, next) {
     }
 }
 
-async function commentAuthorization(req, res, next) {
+async function commentGetAuth(req, res, next) {
     try {
         const authenticatedUserId = res.locals.user.id;
         const comments = await Comment.findAll({
@@ -68,8 +68,25 @@ async function commentAuthorization(req, res, next) {
         return res.status(500).json({message: 'Internal Server Error'});
     }
 }
+
+async function commentAuth(req, res, next) {
+    try {
+        const authenticatedUserId = res.locals.user.id;
+        const { id } = req.params;
+        const comment = await Comment.findByPk(id);
+        if (comment.UserId === authenticatedUserId) {
+            return next();
+        }
+        return res.status(401).json({ message: 'Unauthorized' });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
+}
+
 module.exports = {
     authorization,
     photoAuthorization,
-    commentAuthorization
+    commentGetAuth,
+    commentAuth
 }
