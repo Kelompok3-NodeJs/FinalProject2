@@ -86,7 +86,6 @@ async function commentAuth(req, res, next) {
 
 async function sosialmediaAuthorization(req, res, next) {
     const authenticatedUserId = res.locals.user.id
-    console.log(id, authenticatedUserId);
 
     next();
 }

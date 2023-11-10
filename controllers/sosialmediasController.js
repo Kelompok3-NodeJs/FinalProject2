@@ -1,3 +1,4 @@
+const { User} = require('../models');
 const { SocialMedia } = require('../models');
 const socialmedia = require('../models/socialmedia');
 
@@ -26,17 +27,16 @@ static postSocialMedia(req, res) {
     }
 
     static async getSocialMedia(req, res) {
-        try{
+        try {
             const authenticatedUserId = res.locals.user.id;
-            console.log(authenticatedUserId);
-            const sosmed = await socialmedia.findAll({
-                include:[{model: User},{model: Photo}],
+            const sosmed = await SocialMedia.findAll({
+                include: [{ model: User }],
                 where: {
                     UserId: authenticatedUserId
                 }
-            })
+            });
             
-            let response = sosmed.map(el => {
+            let response = sosmed.map(([, [el]]) => {
                 return {
                     id: el.id,
                     name: el.name,
@@ -49,10 +49,47 @@ static postSocialMedia(req, res) {
                         username: el.User.username,
                         profile_image_url: el.User.profile_image_url,
                     },
-                }
+                };
+            });
+    
+            res.status(200).json(response);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
+    }
+    
+
+    // put / comment
+    static async PutSocialMedia(req, res) {
+        try {
+            const authenticatedUserId = res.locals.user.id;
+            const { name, social_media_url } = req.body;
+            
+            SocialMedia.update({
+                name,
+                social_media_url,
+            }, {
+                where: {
+                    id : authenticatedUserId
+                },
+                returning: true
             })
+            .then(([, [result]]) => {
+                
+                let response = {
+                    "social_media": {
+                        id: result.id,
+                        name: result.name,
+                        social_media_url: result.social_media_url,
+                        UserId: result.UserId,
+                        updatedAt: result.updatedAt,
+                        createdAt: result.createdAt
+                        }
+                }
             return res.status(200).json(response)
-        }catch (error) {
+        })
+        } catch (error) {
             console.log(error);
             return res.status(500).json(error)
         }

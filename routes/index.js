@@ -24,5 +24,6 @@ router.delete('/comments/:id', commentAuth,CommentController.DeleteComments);
 //SocialMediasController
 router.post('/socialmedia', SocialMediasController.postSocialMedia);
 router.get('/socialmedia', sosialmediaAuthorization,SocialMediasController.getSocialMedia);
+router.put('/socialmedia', sosialmediaAuthorization,SocialMediasController.PutSocialMedia);
 
 module.exports = router;
