@@ -48,7 +48,27 @@ async function photoAuthorization(req, res, next) {
     }
 }
 
-async function commentAuthorization(req, res, next) {
+async function commentGetAuth(req, res, next) {
+    try {
+        const authenticatedUserId = res.locals.user.id;
+        const comments = await Comment.findAll({
+            where: {
+                UserId: authenticatedUserId
+            }
+        });
+
+        if (comments.length > 0) {
+            return next();
+        }
+        return res.status(401).json({ message: 'Unauthorized' });
+        
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
+}
+
+async function commentAuth(req, res, next) {
     try {
         const authenticatedUserId = res.locals.user.id;
         const { id } = req.params;
@@ -62,6 +82,7 @@ async function commentAuthorization(req, res, next) {
         return res.status(500).json({message: 'Internal Server Error'});
     }
 }
+
 
 async function sosialmediaAuthorization(req, res, next) {
     const id = req.params.id
@@ -80,6 +101,7 @@ async function sosialmediaAuthorization(req, res, next) {
 module.exports = {
   authorization,
   photoAuthorization,
-  commentAuthorization,
+  commentGetAuth,
+  commentAuth,
   sosialmediaAuthorization
 };

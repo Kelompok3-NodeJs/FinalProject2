@@ -72,15 +72,7 @@ class CommentController {
         try {
             const { comment } = req.body;
             const { id } = req.params;
-            const authenticatedUserId = res.locals.user.id;
-            console.log(authenticatedUserId);
-            const comments = await Comment.findAll({
-                include:[{model: User},{model: Photo}],
-                where: {
-                    UserId: authenticatedUserId
-                }
-            })
-    
+            
             Comment.update({
                 comment
             }, {
@@ -107,17 +99,9 @@ class CommentController {
         }
     }
 
+    // delete / comment
     static async DeleteComments(req, res) {
         const id = +req.params.id;
-        const authenticatedUserId = res.locals.user.id;
-            console.log(authenticatedUserId);
-            const comments = await Comment.findAll({
-                include:[{model: User},{model: Photo}],
-                where: {
-                    UserId: authenticatedUserId
-                }
-            })
-
         // Check if the user with the specified ID exists
         Comment.findByPk(id)
             .then(comment => {
@@ -141,7 +125,6 @@ class CommentController {
             .catch(err => {
                 res.status(500).json(err);
             });
-
     }
 
 
