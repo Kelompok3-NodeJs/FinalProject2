@@ -1,4 +1,4 @@
-const { User, Photo, Comment, socialmedia } = require('../models');
+const { User, Photo, Comment, SocialMedia } = require('../models');
 
 function authorization(req, res, next) {
     const id = req.params.id
