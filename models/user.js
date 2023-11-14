@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.Photo)
       this.hasMany(models.SocialMedia,{foreignKey: 'UserId'})
-      this.hasMany(models.Comment)
+      this.hasMany(models.Comment,{foreignKey: 'UserId'})
     }
   }
   User.init({
