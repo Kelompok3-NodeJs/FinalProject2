@@ -52,6 +52,10 @@ module.exports = (sequelize, DataTypes) => {
             args: true,
             msg: 'Username cannot be empty!'
           }
+        },
+        unique: {
+          args: true,
+          msg: 'Username already exists!'
         }
     },
 
