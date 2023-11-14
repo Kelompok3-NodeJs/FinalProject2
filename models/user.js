@@ -47,7 +47,6 @@ module.exports = (sequelize, DataTypes) => {
     // validasi username
     username: {
       type:DataTypes.STRING,
-      unique: true,
         validate: {
           notEmpty: {
             args: true,
