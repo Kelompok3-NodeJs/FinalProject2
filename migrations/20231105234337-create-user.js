@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       age: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       phone_number: {
         type: Sequelize.STRING

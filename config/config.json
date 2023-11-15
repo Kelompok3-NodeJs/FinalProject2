@@ -1,11 +1,13 @@
 {
   "development": {
     "username": "postgres",
-    "password": "admin",
-    "database": "mygram",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
-  },
+    "password": "4FcAE6-4Fe2G432D2EfDa*FbGfe*1GD6",
+    "database": "railway",
+    "host": "viaduct.proxy.rlwy.net",
+    "dialect": "postgres",
+    "port":"40490"
+
+    },
   "test": {
     "username": "root",
     "password": null,
