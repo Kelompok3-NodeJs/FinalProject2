@@ -1,9 +1,9 @@
 module.exports= {
-    host:"roundhouse.proxy.rlwy.net",
+    host:"viaduct.proxy.rlwy.net",
     username:"postgres",
-    password:"Cg4B2223cab66b5*--2BeeBC3-ggGfG5",
+    password:"EBcF15-52G5Dg2Aced52agG1dDD6gGDc",
     database:"railway",
-    port:"45436",
+    port:"30819",
     dialect:"postgres",
     pool:{
         max: 5,
