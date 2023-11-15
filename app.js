@@ -8,6 +8,6 @@ app.use(express.json());
 
 app.use(router);
 
-app.listen(port, () => {
-    console.log(`Example app listening at ${port}`)
-})
+app.listen(port, "0.0.0.0", function () {
+    console.log(`App listening on port ${port}`);
+  });
