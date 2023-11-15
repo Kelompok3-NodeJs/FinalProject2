@@ -1,18 +1,18 @@
 require('dotenv').config();
 
-const config = {
+module.exports = {
   "development": {
     "username": process.env.PGUSER,
     "password": process.env.PGPASSWORD,
     "database": process.env.PGDATABASE,
     "host": process.env.PGHOST,
-    "port": process.env.PGPORT,
+    "por": process.env.PGPORT,
     "dialect": process.env.DB_DIALECT_DEV,
     "pool":{
-        "max": 5,
-        "min": 0,
-        "idle": 10000,
-        "acquire":30000
+        max: 5,
+        min: 0,
+        idle: 10000,
+        acquire:30000
     },
   },
   "test": {
@@ -31,4 +31,3 @@ const config = {
   }
 }
 
-module.exports = config
