@@ -8,7 +8,7 @@ const config = {
     "host": process.env.DB_HOST_DEV,
     "dialect": process.env.DB_DIALECT_DEV,
     "pool":{
-        "max": 0,
+        "max": 5,
         "min": 0,
         "idle": 10000,
         "acquire":30000
