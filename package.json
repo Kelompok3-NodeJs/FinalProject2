@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon bin/http.js",
+    "development": "cross-env NODE_ENV=development jest --detectOpenHandles --forceExit",
+    "db:create:test": "cross-env NODE_ENV=development npx sequelize db:create",
+    "db:migrate:test": "cross-env NODE_ENV=development npx sequelize db:migrate"
   },
   "keywords": [],
   "author": "",
