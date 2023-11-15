@@ -1,10 +1,17 @@
 {
   "development": {
+    "host": "monorail.proxy.rlwy.net",
     "username": "postgres",
-    "password": "admin",
-    "database": "mygram",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "password": "G2AEAf-gbD66Eg415dDB2552f5aEC-Bg",
+    "database": "railway",
+    "port": "54208",
+    "dialect": "postgres",
+    "pool": {
+      "max": "5",
+      "min": "0",
+      "acquire": "30000",
+      "idle": "10000"
+    }
   },
   "test": {
     "username": "root",
