@@ -5,6 +5,6 @@
     "database": "railway",
     "host": "monorail.proxy.rlwy.net",
     "dialect": "postgres",
-    "use_env_variable": "postgres://postgres:G2AEAf-gbD66Eg415dDB2552f5aEC-Bg@monorail.proxy.rlwy.net:54208/railway"
+    "port": 54208
   }
 }
