@@ -1,30 +1,23 @@
 {
   "development": {
-    "host": "monorail.proxy.rlwy.net",
     "username": "postgres",
     "password": "G2AEAf-gbD66Eg415dDB2552f5aEC-Bg",
     "database": "railway",
-    "port": "54208",
-    "dialect": "postgres",
-    "pool": {
-      "max": 5,
-      "min": 0,
-      "acquire": 30000,
-      "idle": 10000
-    }
+    "host": "monorail.proxy.rlwy.net",
+    "dialect": "postgres"
   },
   "test": {
     "username": "root",
     "password": null,
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "mysql"
   }
 }

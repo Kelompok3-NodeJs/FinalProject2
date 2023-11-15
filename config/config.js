@@ -6,14 +6,8 @@ module.exports = {
     "password": process.env.PGPASSWORD,
     "database": process.env.PGDATABASE,
     "host": process.env.PGHOST,
-    "por": process.env.PGPORT,
-    "dialect": process.env.DB_DIALECT_DEV,
-    "pool":{
-        max: 5,
-        min: 0,
-        idle: 10000,
-        acquire:30000
-    },
+    "port": process.env.PGPORT,
+    "dialect": process.env.DB_DIALECT_DEV
   },
   "test": {
     "username": "root",
