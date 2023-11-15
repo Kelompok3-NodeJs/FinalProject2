@@ -6,8 +6,8 @@
   "scripts": {
     "start": "npx nodemon bin/http.js",
     "development": "cross-env NODE_ENV=development jest --detectOpenHandles --forceExit",
-    "db:create:development": "cross-env NODE_ENV=development npx sequelize db:create",
-    "db:migrate:development": "cross-env NODE_ENV=development npx sequelize db:migrate"
+    "db:create:development": "sudo cross-env NODE_ENV=development npx sequelize db:create",
+    "db:migrate:development": "sudo cross-env NODE_ENV=development npx sequelize db:migrate"
   },
   "keywords": [],
   "author": "",
