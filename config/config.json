@@ -20,6 +20,7 @@
     "password": "4FcAE6-4Fe2G432D2EfDa*FbGfe*1GD6",
     "database": "railway",
     "host": "viaduct.proxy.rlwy.net",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "port":"40490"
   }
 }
