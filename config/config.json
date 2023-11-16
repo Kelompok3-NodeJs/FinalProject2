@@ -15,10 +15,10 @@
   },
   "production": {
     "username": "postgres",
-    "password": "4FcAE6-4Fe2G432D2EfDa*FbGfe*1GD6",
+    "password": "eA36A5A-eEbcfBcdG4a4b3ad6DF622-2",
     "database": "railway",
-    "host": "viaduct.proxy.rlwy.net",
+    "host": "monorail.proxy.rlwy.net",
     "dialect": "postgres",
-    "port":"40490"
+    "port":"34966"
   }
 }
