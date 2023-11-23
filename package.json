@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon bin/http.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "development": "cross-env NODE_ENV=development jest --detectOpenHandles --forceExit",
     "db:create:development": "cross-env NODE_ENV=development npx sequelize db:create",
     "db:migrate:development": "cross-env NODE_ENV=development npx sequelize db:migrate"
