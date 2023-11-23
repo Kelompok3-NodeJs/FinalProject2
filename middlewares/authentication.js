@@ -19,7 +19,7 @@ async function authentication(req, res, next) {
         res.locals.user = user;
         return next();
     } catch (err) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: 'Unauthorized Or You mus insert the route Example : http://roundhouse.proxy.rlwy.net:49524/users/register in the Postman URL' });
     }
 }
 
