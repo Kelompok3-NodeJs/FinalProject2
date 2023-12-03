@@ -13,7 +13,7 @@ function authorization(req, res, next) {
             if (result.id === authenticatedUserId) {
                 next()
             } else {
-                res.status(401).json({message: 'Unauthorized'})
+                res.status(401).json({message: 'Unauthorized: This is not your account'})
             }
         }
     })

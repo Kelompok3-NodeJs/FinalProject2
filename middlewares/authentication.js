@@ -13,7 +13,7 @@ async function authentication(req, res, next) {
         });
 
         if (!user) {
-            return res.status(401).json({ message: 'Invalid Token' });
+            return res.status(401).json({ message: 'Unauthorized: User Not Found' });
         }
 
         res.locals.user = user;

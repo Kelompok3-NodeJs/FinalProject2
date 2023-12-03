@@ -2,42 +2,41 @@ const {comparePassword} = require('../helpers/bcrypt')
 const { User } = require('../models')
 const user = require('../models/user')
 const { generateToken } = require('../helpers/jwt')
+const { Sequelize } = require('sequelize')
 
 class UserController {
-    static register(req, res) {
-        try{
+        static register(req, res) {
             const { email, full_name, username, password, profile_image_url, age, phone_number } = req.body
-        User.create({ 
-            email, 
-            full_name, 
-            username, 
-            password, 
-            profile_image_url, 
-            age, 
-            phone_number 
-        })
-        .then(result => {
-            let response = {
-                email: result.email,
-                full_name: result.full_name,
-                username: result.username,
-                profile_image_url: result.profile_image_url,
-                age: result.age,
-                phone_number: result.phone_number
-            }
-            res.status(201).json(response)
-        })
-    } catch (error) {
-        if (error.name === 'SequelizeValidationError') {
-            res.status(400).json({ 
-                message : 'Validation Error',
-                errors : error.errors.map(err => err.message)
-    });
-        } else {
-            res.status(500).json({ message : 'Internal Server Error' })
+            User.create({ 
+                email, 
+                full_name, 
+                username, 
+                password, 
+                profile_image_url, 
+                age, 
+                phone_number 
+            })
+            .then(result => {
+                let response = {
+                    email: result.email,
+                    full_name: result.full_name,
+                    username: result.username,
+                    profile_image_url: result.profile_image_url,
+                    age: result.age,
+                    phone_number: result.phone_number
+                }
+                res.status(201).json(response)
+            })
+            .catch(error => {
+                // If the error is a Sequelize validation error, send a 400 status code
+                if (error instanceof Sequelize.ValidationError) {
+                    let errorMessage = error.errors.map(err => err.message);
+                    return res.status(400).json({ message: errorMessage });
+                }
+                // For other errors, send a 500 status code
+                return res.status(500).json({ message: error.message });
+            });
         }
-    }
-    }
 
     static login(req, res) {
         const { email, password } = req.body
@@ -49,14 +48,14 @@ class UserController {
         .then(user => {
             if (!user) {
                 throw {
-                    name: "user login error",
+                    error_name: "user login error",
                     devMesaage: `User With Email "${email}" Not Found`
                 }
             }
             const isCorrect = comparePassword(password, user.password)
             if (!isCorrect) {
                 throw {
-                    name: "user login error",
+                    error_name: "user login error",
                     devMesaage: `Wrong Password`
                 }
             }
@@ -68,7 +67,7 @@ class UserController {
             res.status(200).json({ token })
         })
         .catch(err => {
-             res.status(401).json(err)
+             res.status(400).json(err)
             console.log(err)
          })
     }
@@ -104,9 +103,15 @@ class UserController {
             }
             res.status(200).json(response)
         })
-        .catch(err => {
-            res.status(500).json({message: 'Internal Server Error'})
-        })
+        .catch(error => {
+            // If the error is a Sequelize validation error, send a 400 status code
+            if (error instanceof Sequelize.ValidationError) {
+                let errorMessage = error.errors.map(err => err.message);
+                return res.status(400).json({ message: errorMessage });
+            }
+            // For other errors, send a 500 status code
+            return res.status(500).json({ message: error.message });
+        });
     }
 
 
