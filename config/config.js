@@ -8,12 +8,11 @@ module.exports ={
       "dialect": "postgres"
     },
     "test": {
-      "username": "postgres",
-      "password": "hasan123",
-      "database": "testing_fp4",
-      "host": "127.0.0.1",
-      "dialect": "postgres",
-      "dialectModule": require("pg")
+      "username": process.env.PGUSER_TEST,
+      "password": process.env.PGPASSWORD_TEST,
+      "database": process.env.PGDATABASE_TEST,
+      "host": process.env.PGHOST_TEST,
+      "dialect": process.env.PGDIALECT_TEST
     },
     "production": {
       "username": process.env.PGUSER,
