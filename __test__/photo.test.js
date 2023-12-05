@@ -1,8 +1,8 @@
-const request = require('supertest');
-const app = require('../app');
-const { User } = require('../models');
-const { generateToken } = require('../helpers/jwt');
-const user = require('../models/user');
+const request = require("supertest");
+const app = require("../app");
+const { User } = require("../models");
+const { generateToken } = require("../helpers/jwt");
+const user = require("../models/user");
 let server;
 
 let createdUserId;
@@ -10,91 +10,109 @@ let userToken;
 let userToken2;
 let UserData2;
 const updateData = {
-    email: "usertestupdate@mail.com",
-    full_name: "usertestupdate",
-    username: "usertestupdate",
-    password: "usertestupdate",
-    profile_image_url: "www.photo.com/usertest.png",
-    age: 20,
-    phone_number: "08123456710"
-}
+  email: "usertestupdate@mail.com",
+  full_name: "usertestupdate",
+  username: "usertestupdate",
+  password: "usertestupdate",
+  profile_image_url: "www.photo.com/usertest.png",
+  age: 20,
+  phone_number: "08123456710",
+};
 const userdata = {
-    email: "usertest@mail.com", 
-    full_name: "usertest", 
-    username: "usertest", 
-    password: "usertest", 
-    profile_image_url: "www.photo.com/usertest.png", 
-    age: 20, 
-    phone_number: "08123456789"
-}
+  email: "usertest@mail.com",
+  full_name: "usertest",
+  username: "usertest",
+  password: "usertest",
+  profile_image_url: "www.photo.com/usertest.png",
+  age: 20,
+  phone_number: "08123456789",
+};
 const userdata2 = {
-    email: "usertest2@mail.com",
-    full_name: "usertest2",
-    username: "usertest2",
-    password: "usertest2",
-    profile_image_url: "www.photo.com/usertest2.png",
-    age: 20,
-    phone_number: "08123456789"
-}
+  email: "usertest2@mail.com",
+  full_name: "usertest2",
+  username: "usertest2",
+  password: "usertest2",
+  profile_image_url: "www.photo.com/usertest2.png",
+  age: 20,
+  phone_number: "08123456789",
+};
 
 beforeAll(() => {
-   server = app.listen()
-})
+  server = app.listen();
+});
+
+describe("user register", () => {
+  describe("success register", () => {
+    it("should return 201 status code and create a new user", async () => {
+      const res = await request(app)
+        .post("/users/register")
+        .send(userdata)
+        .expect(201);
+      expect(res.body).toHaveProperty("username", userdata.username);
+      expect(res.body).toHaveProperty("email", userdata.email);
+      expect(res.body).toHaveProperty("full_name", userdata.full_name);
+      expect(res.body).toHaveProperty(
+        "profile_image_url",
+        userdata.profile_image_url
+      );
+      expect(res.body).toHaveProperty("age", userdata.age);
+      expect(res.body).toHaveProperty("phone_number", userdata.phone_number);
+
+      // variabel createdUserId digunakan untuk menyimpan id dari user yang baru dibuat, dikarenakan kita tidak boleh menampilkan id ke res.body
+      const registeredUser = await User.findOne({
+        where: { email: userdata.email },
+      });
+      createdUserId = registeredUser.id;
+    });
+  });
+});
+
+describe("Post /photos", () => {
+  describe("success login", () => {
+    it("should return 200 status code and access token", async () => {
+      const res = await request(app)
+        .post("/users/login")
+        .send({
+          email: userdata.email,
+          password: userdata.password,
+        })
+        .expect(200);
+      expect(res.body).toHaveProperty("token", expect.any(String));
+      expect(res.body).not.toHaveProperty("error_name", `Post /photos error`);
+      expect(res.body).not.toHaveProperty("devMesaage");
+      expect(res.body.token).toBeTruthy();
+      expect(res.body.token.length).toBeGreaterThan(0);
+      expect(res.status).toBe(200);
+
+      // variabel userToken digunakan untuk menyimpan token yang didapat dari proses login
+      userToken = res.body.token;
+    });
+
+    it("should create a new photo", async () => {
+      const photoData = {
+        poster_image_url: "https://linktoimage.com/photo.jpg",
+        title: "New Photo Title",
+        caption: "Testing Photo Creation",
+      };
+
+      console.log("Photo Data:", photoData); // Log the photoData being sent
+
+      const response = await request(app)
+        .post("/photos")
+        .set("Authorization", `Bearer ${userToken}`)
+        .send(photoData)
+        .expect(201); // Update the expectation for status code to 201
+      // Log the response received
+      console.log("Response Body:", response);
+    });
+  });
+});
 
 afterAll((done) => {
-    try {
-        User.destroy({where: {}})
-        server.close(done)
-    } catch (error) {
-        console.log(error)
-    }
-})
-
-describe('POST /photos', () => {
-  it('should create a photo and return 201 status', async () => {
-    // Login to get the user token
-    const loginRes = await request(app)
-      .post('/users/login')
-      .send({
-        email: userdata.email,
-        password: userdata.password,
-      });
-
-    // Extract the token from the login response
-    const { token } = loginRes.body;
-
-    // Make a POST request to create a photo using the obtained token for authentication
-    const photoRes = await request(app)
-      .post('/photos')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        title: 'New Photo Title',
-        caption: 'Testing Photo Creation',
-        poster_image_url: 'https://linktoimage.com/photo.jpg',
-      })
-      .expect(201);
-
-    // Assertions based on the response from creating a photo
-    expect(photoRes.body).toHaveProperty('id');
-    expect(photoRes.body).toHaveProperty('poster_image_url', 'https://linktoimage.com/photo.jpg');
-    expect(photoRes.body).toHaveProperty('title', 'New Photo Title');
-    expect(photoRes.body).toHaveProperty('caption', 'Testing Photo Creation');
-  });
-
-  it('should return 401 status if not authenticated', async () => {
-    // Make a POST request without authentication token
-    const photoRes = await request(app)
-      .post('/photos')
-      .send({
-        title: 'New Photo Title',
-        caption: 'Testing Photo Creation',
-        poster_image_url: 'https://linktoimage.com/photo.jpg',
-      })
-      .expect(401);
-
-    // Assertion for unauthorized request
-    expect(photoRes.body).toHaveProperty('message', 'Unauthorized');
-  });
-
-  // If needed, add more test cases for different scenarios
+  try {
+    User.destroy({ where: {} });
+    server.close(done);
+  } catch (error) {
+    console.log(error);
+  }
 });

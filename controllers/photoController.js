@@ -24,8 +24,8 @@ class PhotoController {
                 res.status(201).json(response)
             })
             .catch(err => {
-                console.log(err);
-                res.status(500).json(err);
+                console.error(err);  // Log the error
+                res.status(500).json({ error: 'Internal Server Error' });  // Send a meaningful error response
             })
      }
 
