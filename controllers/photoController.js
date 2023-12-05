@@ -1,11 +1,14 @@
 const { Photo,User,Comment} = require('../models');
 const user = require('../models/user');
+const { Sequelize } = require('sequelize')
 
 class PhotoController {
     // post photo
     static postPhoto(req, res) {
         const { poster_image_url, title, caption } = req.body;
         const user = res.locals.user
+        
+        
         Photo.create({
             poster_image_url,
             title,
@@ -23,10 +26,15 @@ class PhotoController {
                 }
                 res.status(201).json(response)
             })
-            .catch(err => {
-                console.error(err);  // Log the error
-                res.status(500).json({ error: 'Internal Server Error' });  // Send a meaningful error response
-            })
+            .catch(error => {
+                // If the error is a Sequelize validation error, send a 400 status code
+                if (error instanceof Sequelize.ValidationError) {
+                    let errorMessage = error.errors.map(err => err.message);
+                    return res.status(400).json({ message: errorMessage });
+                }
+                // For other errors, send a 500 status code
+                return res.status(500).json({ message: error.message });
+            });
      }
 
     // get /photos
