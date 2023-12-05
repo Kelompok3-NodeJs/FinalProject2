@@ -1,60 +1,26 @@
 const { User } = require('../models');
 const { verifyToken } = require('../helpers/jwt');
 
-let authentication = async(req, res, next) => {
+async function authentication(req, res, next) {
     try {
-   
-      const authorizationHeader = req.headers["authorization"];
-      if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
-        throw {
-          code: 401,
-          message: "Token not provided or in an invalid format!,",
-        };
-      }
-      const token = authorizationHeader.replace('Bearer ', '');
-      console.log(token);
-      
-  
-      if (!token) {
-        throw {
-          code: 401,
-          message: "Token not provided!"
-        }
-      }
+        const token = req.get('token');
+        const userDecoded = verifyToken(token);
+        const user = await User.findOne({
+            where: {
+                id: userDecoded.id,
+                email: userDecoded.email
+            }
+        });
 
-      
-      // verify token
-      const decode = verifyToken(token)
-      console.log(decode);
-  
-      const userData = await User.findOne({
-        where: {
-          id: decode.id,
-          email: decode.email
+        if (!user) {
+            return res.status(401).json({ message: 'Unauthorized: User Not Found' });
         }
-      })
-  
-      if (!userData) {
-        console.log(!userData);
-        throw {
-          code: 401,
-          message: "User not found"
-        }
-      }
-  
-      req.UserData = {
-        id: userData.id,
-        email: userData.email,
-        username: userData.username
-      }
 
-      res.locals.userData = userData
-      next()
-  
-    } catch (error) {
-        console.log(error);
-      res.status(error.code || 500).json(error.message)
+        res.locals.user = user;
+        return next();
+    } catch (err) {
+        return res.status(401).json({ message: 'Unauthorized' });
     }
-  }
-  
+}
+
 module.exports = authentication;
