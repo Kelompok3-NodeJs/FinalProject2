@@ -35,7 +35,7 @@ async function photoAuthorization(req, res, next) {
         });
         
         if (!result) {
-            return res.status(404).json({ message: 'result Not Found' });
+            return res.status(404).json({ messages: ['Photo Not Found', 'result Not Found', 'User Not Found'] });
         }
 
         if (result.UserId === authenticatedUserId) {
