@@ -74,6 +74,9 @@ async function commentAuth(req, res, next) {
         const authenticatedUserId = res.locals.user.id;
         const { id } = req.params;
         const comment = await Comment.findByPk(id);
+        if (!comment) {
+            return res.status(404).json({ message: 'Comment Not Found' });
+        }
         if (comment.UserId === authenticatedUserId) {
             return next();
         }

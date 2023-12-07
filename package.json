@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test npx jest --runInBand --detectOpenHandles  --no-cache --forceExit",
+    "test": "cross-env NODE_ENV=test npx jest --verbose --runInBand --detectOpenHandles  --no-cache --forceExit",
     "db:create:test": "cross-env NODE_ENV=test npx sequelize db:create",
     "db:migrate:test": "cross-env NODE_ENV=test npx sequelize-cli db:migrate",
     "start": "node app.js"

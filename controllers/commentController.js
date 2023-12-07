@@ -1,5 +1,6 @@
 const {Photo,User,Comment} = require('../models');
 const comment = require('../models/comment');
+const { Sequelize } = require('sequelize');
 
 class CommentController {
     // post comment
@@ -21,7 +22,10 @@ class CommentController {
             })
             return res.status(201).json(createComment)
         } catch (error) {
-            console.log(error);
+            if (error instanceof Sequelize.ValidationError) {
+                let errorMessage = error.errors.map(err => err.message);
+                return res.status(400).json({ message: errorMessage });
+            }
             return res.status(500).json(error)
         }
     }
@@ -72,6 +76,9 @@ class CommentController {
         try {
             const { comment } = req.body;
             const { id } = req.params;
+            if (!comment || comment.trim() === '') {
+                return res.status(400).json({ message: 'Comment cannot be empty!' });
+            }
             
             Comment.update({
                 comment
@@ -94,8 +101,12 @@ class CommentController {
             return res.status(200).json(response)
         })
         } catch (error) {
-            console.log(error);
-            return res.status(500).json(error)
+            if (error instanceof Sequelize.ValidationError) {
+                let errorMessage = error.errors.map(err => err.message);
+                return res.status(400).json({ message: errorMessage });
+            }
+            let errorMessage = error.errors.map(err => err.message);
+            return res.status(500).json({ message: errorMessage})
         }
     }
 
@@ -106,10 +117,9 @@ class CommentController {
         Comment.findByPk(id)
             .then(comment => {
                 if (!comment) {
-                    return res.status(404).json({ message: 'Comment Id not found' });
+                    // If the user doesn't exist, send a 404 error
+                    res.status(404).json({ message: "Comment Not Found" });
                 }
-    
-                // If the Comment exists, proceed to delete it
                 Comment.destroy({
                     where: {
                         id
