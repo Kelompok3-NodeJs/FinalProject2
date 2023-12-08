@@ -1,4 +1,5 @@
 const {SocialMedia,User} = require('../models')
+const { Sequelize } = require('sequelize')
 
 class socialMediaController{
     static async postSocialMedia(req,res){
@@ -10,10 +11,21 @@ class socialMediaController{
                 social_media_url,
                 UserId:UserId
             })
-            res.status(201).json(newSocialMedia)
+            let response = {
+                id:newSocialMedia.id,
+                name:newSocialMedia.name,
+                social_media_url:newSocialMedia.social_media_url,
+                UserId:newSocialMedia.UserId,
+                createdAt:newSocialMedia.createdAt,
+                updatedAt:newSocialMedia.updatedAt
+            }
+            res.status(201).json(response)
         } catch (error) {
-            console.log(error);
-            res.status(500).json(error)
+            if (error instanceof Sequelize.ValidationError) {
+                let errorMessage = error.errors.map(err => err.message);
+                return res.status(400).json({ message: errorMessage });
+            }
+            return res.status(500).json(error)
         }
     }
 
