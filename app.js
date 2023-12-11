@@ -9,8 +9,4 @@ app.use(express.json());
 
 app.use(router);
 
-app.listen(port, "127.0.0.1", function () {
-    console.log(`This App listening on port ${port}`);
-  });
-
 module.exports = app;
