@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "hasan123",
+    "database": "mygram",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+      "password": "hasan123",
+      "database": "testing_fp4",
+      "host": "127.0.0.1",
+      "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "4FcAE6-4Fe2G432D2EfDa*FbGfe*1GD6",
+    "database": "railway",
+    "host": "viaduct.proxy.rlwy.net",
+    "dialect": "postgres",
+    "port":"40490"
+  }
+}
