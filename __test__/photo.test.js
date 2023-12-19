@@ -296,7 +296,7 @@ describe("Put /photos", () => {
     registeredPhotoId = registeredPhoto.id;
   });
 
-  describe("error update caused Photo not found", () => {
+  describe("Success update Photo", () => {
     it("should return 200 status and Success Update a Photo", async () => {
       const res = await request(app)
         .put(`/photos/${registeredPhotoId}`)
