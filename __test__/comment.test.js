@@ -106,7 +106,7 @@ describe('POST /comments', () => {
             expect(res.body).not.toHaveProperty('updatedAt', expect.any(String))
         })
 
-        it("should error caused by empty comment", async () => {
+        it("should return status 400 caused error by empty comment", async () => {
         const res = await request(app)
             .post('/comments')
             .set('token', userToken)
@@ -124,7 +124,7 @@ describe('POST /comments', () => {
             expect(res.body).not.toHaveProperty('updatedAt', expect.any(String))
         })
 
-        it("should error caused by empty token", async () => {
+        it("should return status 401 caused error by empty token", async () => {
         const res = await request(app)
             .post('/comments')
             .set('token', "")
@@ -142,7 +142,7 @@ describe('POST /comments', () => {
             expect(res.body).not.toHaveProperty('updatedAt', expect.any(String))
         })
 
-        it("should error caused by invalid token", async () => {
+        it("should return status 401 caused error by invalid token", async () => {
             const res = await request(app)
             .post('/comments')
             .set('token', "invalid token")
